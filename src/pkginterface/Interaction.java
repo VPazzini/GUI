@@ -147,7 +147,7 @@ public class Interaction extends JPanel implements ActionListener {
         }
 
         JDialog rest = new JDialog();
-        rest.setSize(224, 131);
+        rest.setSize(224, 141);
         rest.setModal(true);
         rest.setResizable(false);
         rest.setLocationRelativeTo(null);
