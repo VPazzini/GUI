@@ -31,21 +31,13 @@ public class Interaction extends JPanel implements ActionListener {
     private final MainWindow jFrame;
     private int nodeNumber = 1;
     private int edgeNumber = 1;
-    private javax.swing.JCheckBox jCheckBoxShowNumbers;
+    private boolean shiftHold = false;
+    private String nodeFile = "node_file.dat";
+    private String elemFile = "elem_file.dat";
+    private String inputFile = "input.dat";
 
     public Interaction(MainWindow jFrame) {
         this.setSize(500, 600);
-
-        jCheckBoxShowNumbers = new javax.swing.JCheckBox();
-        jCheckBoxShowNumbers.setText("Show Numbers");
-        jCheckBoxShowNumbers.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                repaint();
-            }
-        });
-        jCheckBoxShowNumbers.setLocation(10, 10);
-        this.add(jCheckBoxShowNumbers);
 
         setLayout(new BorderLayout());
         this.jFrame = jFrame;
@@ -110,7 +102,9 @@ public class Interaction extends JPanel implements ActionListener {
                 } else {
                     if (cSelected != null) {
                         this.newEdge(cSelected, temp);
-                        selectedNode = null;
+                        if (!shiftHold) {
+                            selectedNode = null;
+                        }
                     } else {
                         this.selectedNode = temp;
                     }
@@ -186,7 +180,6 @@ public class Interaction extends JPanel implements ActionListener {
 
     private boolean isInside(Node n, Point p) {
         Point temp = (Point) n.getPos().clone();
-        //temp.setLocation(temp.x + nodeSize / 2, temp.y + nodeSize / 2);
 
         if (p.distance(temp) <= nodeSize / 2) {
             return true;
@@ -196,13 +189,16 @@ public class Interaction extends JPanel implements ActionListener {
     }
 
     private void newEdge(Node n1, Node n2) {
-        Edge newEdge = new Edge(n1, n2, edgeNumber++);
+        Edge newEdge1 = new Edge(n1, n2, edgeNumber);
+        Edge newEdge2 = new Edge(n2, n1, edgeNumber);
         for (Edge e : edges) {
-            if (e.equals(newEdge)) {
+            if (e.equals(newEdge1) || e.equals(newEdge2)) {
+                edges.remove(e);
                 return;
             }
         }
-        edges.add(newEdge);
+        edges.add(newEdge1);
+        edgeNumber++;
     }
 
     public void delete() {
@@ -227,12 +223,24 @@ public class Interaction extends JPanel implements ActionListener {
         repaint();
     }
 
+    public void shiftPressed() {
+        shiftHold = true;
+    }
+
+    public void shiftReleased() {
+        shiftHold = false;
+    }
+
     public void generateFiles() {
         this.generateNodeFile();
         this.generateElemFile();
+        this.generateInputFile();
     }
 
     private void generateNodeFile() {
+        if (nodes.size() == 0) {
+            return;
+        }
         double lowerX = nodes.get(0).getPos().x;
         double lowerY = nodes.get(0).getPos().y;
 
@@ -248,7 +256,7 @@ public class Interaction extends JPanel implements ActionListener {
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(4);
 
-        File file = new File("node_file.dat");
+        File file = new File(this.nodeFile);
         try {
             BufferedWriter output = new BufferedWriter(new FileWriter(file));
             for (Node n : nodes) {
@@ -271,7 +279,7 @@ public class Interaction extends JPanel implements ActionListener {
     }
 
     private void generateElemFile() {
-        File file = new File("elem_file.dat");
+        File file = new File(this.elemFile);
         try {
             BufferedWriter output = new BufferedWriter(new FileWriter(file));
             for (Edge e : edges) {
@@ -281,6 +289,69 @@ public class Interaction extends JPanel implements ActionListener {
                         + e.getNode2().getNumber() + "\n";
                 output.write(line);
             }
+            output.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Interaction.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void generateInputFile() {
+        File file = new File(this.inputFile);
+        try {
+            BufferedWriter output = new BufferedWriter(new FileWriter(file));
+            String line;
+
+            output.write("&TIMING\n");
+            line = "TSTART=" + ((Float) jFrame.getjSpinnerTStart().getValue())
+                    + ", TSTOP=" + ((Float) jFrame.getjSpinnerTStop().getValue())
+                    + ", DELTAT=" + jFrame.getjTextDeltaT().getText()
+                    + "\n/\n";
+            output.write(line);
+
+            output.write("&NODELIST\n");
+            line = "NNP=" + edges.size() + ", nodefile='" + this.nodeFile + "',"
+                    + "NELG=" + jFrame.getjTextNELG().getText()
+                    + ", NMAT=" + jFrame.getjTextNMAT().getText()
+                    + ", elemfile='" + this.elemFile
+                    + ", conffile='conf_file.dat'"
+                    + ", d_o=" + jFrame.getjTextDO().getText()
+                    + ", d_i=" + jFrame.getjTextDI().getText() + "\n/\n";
+            output.write(line);
+
+            output.write("&MATERIAL01\n");
+            line = "TEMOD=" + jFrame.getjTextTEMOD().getText()
+                    + ", TDENS=" + jFrame.getjTextTDENS().getText()
+                    + ", TPOI=" + jFrame.getjTextTIPOI().getText() + "\n/\n";
+            output.write(line);
+
+            output.write("&FLUIDELASTIC\n");
+            line = "DIRECTION=" + jFrame.getjTextDirection().getText()
+                    + ", Model=" + jFrame.getjTextModel().getText()
+                    + ", NFLEX=" + jFrame.getjTextNFLEX().getText()
+                    + ", VELOCITY=" + jFrame.getjTextVelocity().getText()
+                    + ", DENSITY=" + jFrame.getjTextDensity().getText()
+                    + ", TIMESTEP=" + jFrame.getjTextTimeStep().getText()
+                    + ", TF=" + jFrame.getjTextTF().getText() + "\n/\n";
+            output.write(line);
+
+            output.write("&IMPACT\n");
+            line = "ITERATIONS=" + jFrame.getjSpinnerIterations().getValue() + "\n"
+                    + "BETA=" + jFrame.getjTextBeta().getText() + "\n"
+                    + "TYPE_I=" + jFrame.getjTextType_I().getText() + "\n"
+                    + "TOLERANCE=" + jFrame.getjTextTolerance().getText() + "\n"
+                    + "STIFF=" + jFrame.getjTextStiffness().getText() + "\n"
+                    + "DIAM=" + jFrame.getjTextDiameter().getText() + "\n"
+                    + "DISPTOSCREEN=." + (jFrame.getjCheckBoxDisplay().isSelected() ? "TRUE" : "FALSE") + ".\n"
+                    + "NODE=";
+            output.write(line);
+
+            line = "";
+            for (Edge e : edges) {
+                line += e.getEdgeNumber() + " ";
+            }
+            line += "\n/";
+            output.write(line);
+
             output.close();
         } catch (IOException ex) {
             Logger.getLogger(Interaction.class.getName()).log(Level.SEVERE, null, ex);
