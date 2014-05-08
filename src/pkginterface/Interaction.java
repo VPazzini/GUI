@@ -8,8 +8,6 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -32,9 +30,23 @@ public class Interaction extends JPanel implements ActionListener {
     private final int nodeSize = 20;
     private final MainWindow jFrame;
     private int nodeNumber = 1;
+    private int edgeNumber = 1;
+    private javax.swing.JCheckBox jCheckBoxShowNumbers;
 
     public Interaction(MainWindow jFrame) {
         this.setSize(500, 600);
+
+        jCheckBoxShowNumbers = new javax.swing.JCheckBox();
+        jCheckBoxShowNumbers.setText("Show Numbers");
+        jCheckBoxShowNumbers.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                repaint();
+            }
+        });
+        jCheckBoxShowNumbers.setLocation(10, 10);
+        this.add(jCheckBoxShowNumbers);
+
         setLayout(new BorderLayout());
         this.jFrame = jFrame;
     }
@@ -107,7 +119,6 @@ public class Interaction extends JPanel implements ActionListener {
                 return;
             }
 
-            //p.setLocation(p.x - nodeSize / 2, p.y - nodeSize / 2);
             this.nodes.add(new Node(p, nodeNumber++));
             this.repaint();
         } else {
@@ -120,7 +131,6 @@ public class Interaction extends JPanel implements ActionListener {
     public void moveNode(Point p) {
         if (moving) {
             Point temp = new Point();
-            //temp.setLocation(p.x - nodeSize / 2, p.y - nodeSize / 2);
             temp.setLocation(p.x, p.y);
             movingNode.setPos(temp);
         } else {
@@ -128,7 +138,6 @@ public class Interaction extends JPanel implements ActionListener {
                 if (isInside(n, p)) {
                     this.moving = true;
                     Point temp = new Point();
-                    //temp.setLocation(p.x - nodeSize / 2, p.y - nodeSize / 2);
                     temp.setLocation(p.x, p.y);
                     movingNode = n;
                     n.setPos(temp);
@@ -187,7 +196,7 @@ public class Interaction extends JPanel implements ActionListener {
     }
 
     private void newEdge(Node n1, Node n2) {
-        Edge newEdge = new Edge(n1, n2);
+        Edge newEdge = new Edge(n1, n2, edgeNumber++);
         for (Edge e : edges) {
             if (e.equals(newEdge)) {
                 return;
@@ -219,7 +228,27 @@ public class Interaction extends JPanel implements ActionListener {
     }
 
     public void generateFiles() {
-        File file = new File("example.txt");
+        this.generateNodeFile();
+        this.generateElemFile();
+    }
+
+    private void generateNodeFile() {
+        double lowerX = nodes.get(0).getPos().x;
+        double lowerY = nodes.get(0).getPos().y;
+
+        for (Node n : nodes) {
+            if (n.getPos().x < lowerX) {
+                lowerX = n.getPos().getX();
+            }
+            if (n.getPos().y < lowerY) {
+                lowerY = n.getPos().getY();
+            }
+        }
+
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(4);
+
+        File file = new File("node_file.dat");
         try {
             BufferedWriter output = new BufferedWriter(new FileWriter(file));
             for (Node n : nodes) {
@@ -231,15 +260,31 @@ public class Interaction extends JPanel implements ActionListener {
                         + (n.isRx() ? "1" : "0") + " "
                         + (n.isRy() ? "1" : "0") + " "
                         + (n.isRz() ? "1" : "0") + " "
-                        + n.getPos().x + " "
-                        + n.getPos().y + " 0.0\n";
+                        + df.format(n.getPos().getX() - lowerX) + " "
+                        + df.format(n.getPos().getY() - lowerY) + " 0.0\n";
                 output.write(line);
-                //System.out.println(line);
             }
             output.close();
         } catch (IOException ex) {
             Logger.getLogger(Interaction.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
+
+    private void generateElemFile() {
+        File file = new File("elem_file.dat");
+        try {
+            BufferedWriter output = new BufferedWriter(new FileWriter(file));
+            for (Edge e : edges) {
+                String line;
+                line = e.getEdgeNumber() + " "
+                        + e.getNode1().getNumber() + " "
+                        + e.getNode2().getNumber() + "\n";
+                output.write(line);
+            }
+            output.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Interaction.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }
