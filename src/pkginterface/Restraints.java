@@ -7,9 +7,16 @@ public class Restraints extends javax.swing.JPanel {
     
     JDialog jFrame;
     
-    public Restraints(JDialog jFrame) {
+    public Restraints(JDialog jFrame, boolean[] rest) {
         initComponents();
         this.jFrame = jFrame;
+        this.jCheckBoxX.setSelected(rest[0]);
+        this.jCheckBoxY.setSelected(rest[1]);
+        this.jCheckBoxZ.setSelected(rest[2]);
+        this.jCheckBoxRX.setSelected(rest[3]);
+        this.jCheckBoxRY.setSelected(rest[4]);
+        this.jCheckBoxRZ.setSelected(rest[5]);
+        
     }
 
     @SuppressWarnings("unchecked")

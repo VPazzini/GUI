@@ -155,7 +155,7 @@ public class Interaction extends JPanel implements ActionListener {
         rest.setResizable(false);
         rest.setLocationRelativeTo(null);
         rest.setTitle("Node " + temp.getNumber());
-        Restraints r = new Restraints(rest);
+        Restraints r = new Restraints(rest,temp.getRest());
         rest.add(r);
 
         rest.setVisible(true);

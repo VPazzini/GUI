@@ -74,7 +74,18 @@ public class Node {
     public void setRz(Boolean Rz) {
         this.Rz = Rz;
     }
-
+    
+    public boolean[] getRest(){
+        boolean[] rest = new boolean[6];
+        rest[0] = x;
+        rest[1] = y;
+        rest[2] = z;
+        rest[3] = Rx;
+        rest[4] = Ry;
+        rest[5] = Rz;
+        return rest;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 5;
