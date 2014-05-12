@@ -1,10 +1,11 @@
-
 package pkginterface;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.Action;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JSpinner;
@@ -103,11 +104,13 @@ public class MainWindow extends javax.swing.JFrame {
         jTextNMAT = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenu3 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Fluidelastic Instability Simulator");
+        setResizable(false);
 
         jButton1.setText("Run");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -123,6 +126,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel3.setText("DELTAT");
 
         jSpinnerTStart.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), Float.valueOf(1000.0f), Float.valueOf(0.1f)));
+        jSpinnerTStart.setToolTipText("Start Time in seconds. (This value must be lesser than TSTOP value)");
 
         jSpinnerTStop.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(10.0f), Float.valueOf(0.1f), Float.valueOf(10000.0f), Float.valueOf(0.1f)));
 
@@ -452,8 +456,13 @@ public class MainWindow extends javax.swing.JFrame {
 
         jMenu1.setText("File");
 
-        jMenu3.setText("jMenu3");
-        jMenu1.add(jMenu3);
+        jMenuItem1.setText("Change files name");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
 
         jMenuBar1.add(jMenu1);
 
@@ -492,9 +501,9 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         JFrame drawWindow = new JFrame();
-        drawWindow.setSize(500,600);
+        drawWindow.setSize(500, 600);
         drawWindow.setLocationRelativeTo(null);
-        
+
         drawWindow.addKeyListener(
                 new KeyAdapter() {
                     @Override
@@ -509,6 +518,7 @@ public class MainWindow extends javax.swing.JFrame {
                             jCheckBoxMenuItem1.doClick();
                         }
                     }
+
                     @Override
                     public void keyPressed(KeyEvent evt) {
                         if (evt.getKeyCode() == KeyEvent.VK_SHIFT) {
@@ -517,16 +527,21 @@ public class MainWindow extends javax.swing.JFrame {
                     }
 
                 });
-        
+
         drawWindow.add(inter);
-        
+
         drawWindow.setVisible(true);
-        
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jCheckBoxMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem1ActionPerformed
         inter.repaint();
     }//GEN-LAST:event_jCheckBoxMenuItem1ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        ChangeFileNames names = new ChangeFileNames(inter);
+        names.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -554,13 +569,14 @@ public class MainWindow extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new MainWindow().setVisible(true);
             }
         });
     }
-    
-    public boolean isShowNumbers(){
+
+    public boolean isShowNumbers() {
         //return this.jCheckBoxShowNumbers.isSelected();
         //System.out.println(this.jMenu2.isSelected());
         return this.jCheckBoxMenuItem1.isSelected();
@@ -661,9 +677,8 @@ public class MainWindow extends javax.swing.JFrame {
     public JSpinner getjSpinnerIterations() {
         return jSpinnerIterations;
     }
-    
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -698,8 +713,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;

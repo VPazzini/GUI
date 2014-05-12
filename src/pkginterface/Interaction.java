@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,6 +36,7 @@ public class Interaction extends JPanel implements ActionListener {
     private String nodeFile = "node_file.dat";
     private String elemFile = "elem_file.dat";
     private String inputFile = "input.dat";
+    private String confFile = "conf_file.dat";
 
     public Interaction(MainWindow jFrame) {
         this.setSize(500, 600);
@@ -51,6 +53,24 @@ public class Interaction extends JPanel implements ActionListener {
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         rh.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g2d.setRenderingHints(rh);
+
+        Rectangle r = this.getBounds();
+        int h = r.height - 30;
+        int w = r.width - 10;
+
+        System.out.println(this.getBounds());
+        g2d.drawLine(30, h, 55, h); //X
+        g2d.drawLine(55, h, 49, h-3);
+        g2d.drawLine(55, h, 49, h+3);
+        
+        g2d.drawLine(30, h, 30, h-25); //Y
+        g2d.drawLine(30, h-25, 33, h-19);
+        g2d.drawLine(30, h-25, 27, h-19);
+        
+        g2d.drawLine(30, h, 20, h+10); //Z
+        g2d.drawLine(20, h+10, 23, h+4);
+        g2d.drawLine(20, h+10, 25, h+8);
+        
 
         for (Node n : nodes) {
             if (n.equals(selectedNode)) {
@@ -81,6 +101,7 @@ public class Interaction extends JPanel implements ActionListener {
 
                 g2d.drawString(df.format(dist) + "(" + df.format(cos) + "º)", strPoint.x - 5, strPoint.y - 5);
             }
+
         }
 
     }
@@ -155,7 +176,7 @@ public class Interaction extends JPanel implements ActionListener {
         rest.setResizable(false);
         rest.setLocationRelativeTo(null);
         rest.setTitle("Node " + temp.getNumber());
-        Restraints r = new Restraints(rest,temp.getRest());
+        Restraints r = new Restraints(rest, temp.getRest());
         rest.add(r);
 
         rest.setVisible(true);
@@ -312,8 +333,8 @@ public class Interaction extends JPanel implements ActionListener {
             line = "NNP=" + edges.size() + ", nodefile='" + this.nodeFile + "',"
                     + "NELG=" + jFrame.getjTextNELG().getText()
                     + ", NMAT=" + jFrame.getjTextNMAT().getText()
-                    + ", elemfile='" + this.elemFile
-                    + ", conffile='conf_file.dat'"
+                    + ", elemfile='" + this.elemFile + "'"
+                    + ", conffile='" + confFile + "'"
                     + ", d_o=" + jFrame.getjTextDO().getText()
                     + ", d_i=" + jFrame.getjTextDI().getText() + "\n/\n";
             output.write(line);
@@ -356,6 +377,22 @@ public class Interaction extends JPanel implements ActionListener {
         } catch (IOException ex) {
             Logger.getLogger(Interaction.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void setNodeFile(String nodeFile) {
+        this.nodeFile = nodeFile;
+    }
+
+    public void setElemFile(String elemFile) {
+        this.elemFile = elemFile;
+    }
+
+    public void setInputFile(String inputFile) {
+        this.inputFile = inputFile;
+    }
+
+    public void setConfFile(String confFile) {
+        this.confFile = confFile;
     }
 
 }
