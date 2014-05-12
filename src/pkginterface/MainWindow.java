@@ -1,43 +1,19 @@
 package pkginterface;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.Action;
 import javax.swing.JCheckBox;
-import javax.swing.JFrame;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 
 public class MainWindow extends javax.swing.JFrame {
 
     Interaction inter = new Interaction(this);
+    DrawWindow drawWindow;
 
     public MainWindow() {
         initComponents();
         this.setLocationRelativeTo(null);
-        inter.addMouseListener(
-                new MouseAdapter() {
-                    @Override
-                    public void mouseReleased(MouseEvent evt) {
-                        if (evt.getButton() == MouseEvent.BUTTON1) {
-                            inter.newNode(evt.getPoint());
-                        }
-                        if (evt.getButton() == MouseEvent.BUTTON3) {
-                            inter.showRest(evt.getPoint());
-                        }
-                    }
-                });
-
-        inter.addMouseMotionListener(
-                new MouseAdapter() {
-                    @Override
-                    public void mouseDragged(MouseEvent evt) {
-                        inter.moveNode(evt.getPoint());
-                    }
-                });
     }
 
     @SuppressWarnings("unchecked")
@@ -500,14 +476,15 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        JFrame drawWindow = new JFrame();
-        drawWindow.setSize(500, 600);
+        drawWindow = new DrawWindow(inter);
+        //drawWindow.setSize(500, 600);
         drawWindow.setLocationRelativeTo(null);
 
         drawWindow.addKeyListener(
                 new KeyAdapter() {
                     @Override
                     public void keyReleased(KeyEvent evt) {
+                        System.out.println("why??");
                         if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
                             inter.delete();
                         }
@@ -528,7 +505,7 @@ public class MainWindow extends javax.swing.JFrame {
 
                 });
 
-        drawWindow.add(inter);
+        //drawWindow.add(inter);
 
         drawWindow.setVisible(true);
 
@@ -577,8 +554,6 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     public boolean isShowNumbers() {
-        //return this.jCheckBoxShowNumbers.isSelected();
-        //System.out.println(this.jMenu2.isSelected());
         return this.jCheckBoxMenuItem1.isSelected();
     }
 
@@ -677,6 +652,15 @@ public class MainWindow extends javax.swing.JFrame {
     public JSpinner getjSpinnerIterations() {
         return jSpinnerIterations;
     }
+    
+    public boolean isStraightLine(){
+        return drawWindow.getjToggleStraightLine().isSelected();
+    }
+    
+    public boolean isNewNode(){
+        return drawWindow.getjToggleNewNode().isSelected();
+    }
+    
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

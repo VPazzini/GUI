@@ -9,6 +9,8 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -25,6 +27,9 @@ public class Interaction extends JPanel implements ActionListener {
     private Graphics2D g2d;
     private final ArrayList<Node> nodes = new ArrayList<>();
     private final ArrayList<Edge> edges = new ArrayList<>();
+    
+    private final ArrayList<Line> lines = new ArrayList<>();
+    
     private boolean moving = false;
     private Node movingNode = null;
     private Node selectedNode = null;
@@ -37,12 +42,83 @@ public class Interaction extends JPanel implements ActionListener {
     private String elemFile = "elem_file.dat";
     private String inputFile = "input.dat";
     private String confFile = "conf_file.dat";
-
+    
+    private Point linePoint = null;
+    
     public Interaction(MainWindow jFrame) {
         this.setSize(500, 600);
 
         setLayout(new BorderLayout());
         this.jFrame = jFrame;
+
+        this.addMouseListener(
+                new MouseAdapter() {
+
+                    @Override
+                    public void mouseReleased(MouseEvent evt) {
+                        if (moving) {
+                            moving = false;
+                            selectedNode = null;
+                        }
+                        repaint();
+                    }
+
+                    @Override
+                    public void mousePressed(MouseEvent evt) {
+
+                        if (evt.getButton() == MouseEvent.BUTTON1) {
+
+                            if(jFrame.isStraightLine()){
+                                if(linePoint == null){
+                                    linePoint = evt.getPoint();
+                                }else{
+                                    lines.add(new Line(linePoint, evt.getPoint()));
+                                    linePoint = null;
+                                }
+                                repaint();
+                                return;
+                            }
+                            
+                            
+                            Node temp = getNode(evt.getPoint());
+                            if (temp != null) {
+                                if (temp.equals(selectedNode)) {
+                                    selectedNode = null;
+                                } else {
+                                    if (selectedNode != null) {
+                                        //edges.add(new Edge(temp, selectedNode, edgeNumber++));
+                                        newEdge(temp, selectedNode);
+                                        selectedNode = null;
+                                    } else {
+                                        selectedNode = temp;
+                                    }
+                                }
+                            } else {
+                                selectedNode = null;
+                                newNode(evt.getPoint());
+                            }
+                        }
+                        if (evt.getButton() == MouseEvent.BUTTON3) {
+                            showRest(evt.getPoint());
+                        }
+                        repaint();
+                    }
+                });
+
+        this.addMouseMotionListener(
+                new MouseAdapter() {
+                    @Override
+                    public void mouseDragged(MouseEvent evt) {
+                        moving = true;
+                        if (selectedNode != null) {
+                            selectedNode.setPos(evt.getPoint());
+                            repaint();
+                        }
+                        //moving = false;
+                        //moveNode(evt.getPoint());
+                    }
+                });
+
     }
 
     @Override
@@ -58,20 +134,24 @@ public class Interaction extends JPanel implements ActionListener {
         int h = r.height - 30;
         int w = r.width - 10;
 
-        System.out.println(this.getBounds());
+        //Drawing the coordinates symbol
         g2d.drawLine(30, h, 55, h); //X
-        g2d.drawLine(55, h, 49, h-3);
-        g2d.drawLine(55, h, 49, h+3);
-        
-        g2d.drawLine(30, h, 30, h-25); //Y
-        g2d.drawLine(30, h-25, 33, h-19);
-        g2d.drawLine(30, h-25, 27, h-19);
-        
-        g2d.drawLine(30, h, 20, h+10); //Z
-        g2d.drawLine(20, h+10, 23, h+4);
-        g2d.drawLine(20, h+10, 25, h+8);
-        
+        g2d.drawLine(55, h, 49, h - 3);
+        g2d.drawLine(55, h, 49, h + 3);
 
+        g2d.drawLine(30, h, 30, h - 25); //Y
+        g2d.drawLine(30, h - 25, 33, h - 19);
+        g2d.drawLine(30, h - 25, 27, h - 19);
+
+        g2d.drawLine(30, h, 20, h + 10); //Z
+        g2d.drawLine(20, h + 10, 23, h + 4);
+        g2d.drawLine(20, h + 10, 25, h + 8);
+        
+        for(Line l : lines){
+            g2d.drawLine(l.getPoint1().x, l.getPoint1().y,
+                    l.getPoint2().x, l.getPoint2().y);
+        }
+        
         for (Node n : nodes) {
             if (n.equals(selectedNode)) {
                 g2d.setColor(Color.red);
@@ -112,42 +192,48 @@ public class Interaction extends JPanel implements ActionListener {
     }
 
     public void newNode(Point p) {
-        if (!moving) {
-
-            Node cSelected = selectedNode;
-
-            Node temp = this.getNode(p);
-            if (temp != null) {
-                if (temp.equals(cSelected)) {
-                    this.selectedNode = null;
-                } else {
-                    if (cSelected != null) {
-                        this.newEdge(cSelected, temp);
-                        if (!shiftHold) {
-                            selectedNode = null;
-                        }
-                    } else {
-                        this.selectedNode = temp;
-                    }
-                }
-                repaint();
-                return;
-            }
-
-            this.nodes.add(new Node(p, nodeNumber++));
-            this.repaint();
-        } else {
-            moving = false;
-            movingNode = null;
-            repaint();
-        }
+        this.nodes.add(new Node(p, nodeNumber++));
+        repaint();
     }
 
+    /*public void newNode(Point p) {
+     if (!moving) {
+
+     Node cSelected = selectedNode;
+
+     Node temp = this.getNode(p);
+     if (temp != null) {
+     if (temp.equals(cSelected)) {
+     this.selectedNode = null;
+     } else {
+     if (cSelected != null) {
+     this.newEdge(cSelected, temp);
+     if (!shiftHold) {
+     selectedNode = null;
+     }
+     } else {
+     this.selectedNode = temp;
+     }
+     }
+     repaint();
+     return;
+     }
+
+     this.nodes.add(new Node(p, nodeNumber++));
+     this.repaint();
+     } else {
+     moving = false;
+     movingNode = null;
+     repaint();
+     }
+     }*/
     public void moveNode(Point p) {
         if (moving) {
+
             Point temp = new Point();
             temp.setLocation(p.x, p.y);
             movingNode.setPos(temp);
+
         } else {
             for (Node n : nodes) {
                 if (isInside(n, p)) {
@@ -202,7 +288,7 @@ public class Interaction extends JPanel implements ActionListener {
     private boolean isInside(Node n, Point p) {
         Point temp = (Point) n.getPos().clone();
 
-        if (p.distance(temp) <= nodeSize / 2) {
+        if (p.distance(temp) <= (nodeSize / 1.6)) {
             return true;
         }
 
