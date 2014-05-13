@@ -206,7 +206,7 @@ public class Interaction extends JPanel implements ActionListener {
         path.curveTo(ix+length+radius, iy, ix+length+radius,
                 iy+width, ix+length, iy+width);
         path.lineTo(ix, iy+width);
-        FlatteningPathIterator f = new FlatteningPathIterator(path.getPathIterator(new AffineTransform()), 0.1);
+        FlatteningPathIterator f = new FlatteningPathIterator(path.getPathIterator(new AffineTransform()), 1);
         
         //Point p = new Point(100, 50);
         Node n1 = new Node(new Point(100, 50), nodeNumber++);

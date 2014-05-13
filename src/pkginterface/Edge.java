@@ -43,7 +43,7 @@ public class Edge {
         }
     }
 
-    private int tolerance = 5;
+    private int tolerance = 10;
 
     public boolean belongToEdge(Point p) {
         Point p1 = new Point();
@@ -51,22 +51,15 @@ public class Edge {
         for (int i = 0; i < points.size() - 1; i++) {
             p1.setLocation(points.get(i));
             p2.setLocation(points.get(i + 1));
-            int y;
-            if ((p2.x - p1.x) != 0) {
-                y = p1.y + ((p2.y - p1.y) / (p2.x - p1.x)) * (p.x - p1.x);
-            } else {
-                y = p.y;
-            }
 
-            if (y >= p.y - tolerance && y <= p.y + tolerance) {
-                if (p.y <= Math.max(p1.y, p2.y) + tolerance && p.y >= Math.min(p1.y, p2.y) - tolerance
-                        && p.x <= Math.max(p1.x, p2.x) + tolerance && p.x >= Math.min(p1.x, p2.x) - tolerance) {
-                    //System.out.println("true");
-                    /*System.out.println(p1);
-                     System.out.println(p2);
-                     System.out.println(p);*/
-                    return true;
-                }
+            Point closePoint = getClosestPointOnSegment(p1.x, p1.y, p2.x, p2.y, p.x, p.y);
+            if(closePoint == null){
+                System.out.println(p1);
+                System.out.println(p2);
+                return false;
+            }
+            if (closePoint.distance(p) < tolerance) {
+                return true;
             }
 
         }
@@ -77,44 +70,37 @@ public class Edge {
     public Edge splitEdge(Point p, Node newNode, int edgeNumber) {
         Point p1 = new Point();
         Point p2 = new Point();
-        ArrayList<Point> toRemove = new ArrayList<>();
+        
         Edge newEdge = new Edge(newNode, node2, edgeNumber);
-        boolean remove = false;
+
+        int div = 0;
+        int closeDist = 10;
+        Point closestPoint = null;
+
         for (int i = 0; i < points.size() - 1; i++) {
             p1 = points.get(i);
             p2 = points.get(i + 1);
-            int y;
-            if ((p2.x - p1.x) != 0) {
-                y = p1.y + ((p2.y - p1.y) / (p2.x - p1.x)) * (p.x - p1.x);
-            } else {
-                y = p.y;
+
+            Point closePoint = getClosestPointOnSegment(p1.x, p1.y, p2.x, p2.y, p.x, p.y);
+
+            if (closePoint.distance(p) < closeDist) {
+                closeDist = (int) closePoint.distance(p);
+                div = i;
+                closestPoint = closePoint;
             }
-
-            if (remove) {
-                toRemove.add(p1);
-            }
-            if (!remove && (y >= p.y - tolerance && y <= p.y + tolerance)) {
-                if (p.y <= Math.max(p1.y, p2.y) + tolerance && p.y >= Math.min(p1.y, p2.y) - tolerance
-                        && p.x <= Math.max(p1.x, p2.x) + tolerance && p.x >= Math.min(p1.x, p2.x) - tolerance) {
-
-                    Point closest = getClosestPointOnSegment(p1.x, p1.y, p2.x, p2.y, p.x, p.y);
-
-                    newNode.setPos(closest);
-                    this.node2 = newNode;
-
-                    remove = true;
-                    toRemove.add(p2);
-                }
-            }
-
         }
-        toRemove.add(p2);
-        this.insertPoint(p);
-        newEdge.insertPoint(p);
-        for (Point point : toRemove) {
-            points.remove(point);
-            newEdge.insertPoint(point);
+
+        newNode.setPos(closestPoint);
+
+        for (int i = div+1; i < points.size();) {
+            Point rPoint = points.remove(i);
+            newEdge.insertPoint(rPoint);
         }
+        //newEdge.insertPoint(closestPoint);
+        //this.insertPoint(closestPoint);
+        this.points.add(closestPoint);
+        this.node2 = newNode;
+        
         return newEdge;
     }
 
@@ -123,7 +109,7 @@ public class Edge {
         double yDelta = sy2 - sy1;
 
         if ((xDelta == 0) && (yDelta == 0)) {
-            throw new IllegalArgumentException("Segment start equals segment end");
+            return new Point(sx1, sy1);
         }
 
         double u = ((px - sx1) * xDelta + (py - sy1) * yDelta) / (xDelta * xDelta + yDelta * yDelta);
