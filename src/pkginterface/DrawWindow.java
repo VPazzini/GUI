@@ -35,6 +35,7 @@ public class DrawWindow extends javax.swing.JFrame {
         jToggleButton2 = new javax.swing.JToggleButton();
         jToggleNewNode = new javax.swing.JToggleButton();
         jToggleNewEdge = new javax.swing.JToggleButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -62,6 +63,17 @@ public class DrawWindow extends javax.swing.JFrame {
         jToggleNewEdge.setText("E");
         jToggleNewEdge.setFocusable(false);
 
+        jButton1.setText("U");
+        jButton1.setFocusable(false);
+        jButton1.setMaximumSize(new java.awt.Dimension(30, 30));
+        jButton1.setMinimumSize(new java.awt.Dimension(30, 30));
+        jButton1.setPreferredSize(new java.awt.Dimension(30, 30));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -72,7 +84,8 @@ public class DrawWindow extends javax.swing.JFrame {
                     .addComponent(jToggleStraightLine, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jToggleButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jToggleNewNode, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
-                    .addComponent(jToggleNewEdge, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE))
+                    .addComponent(jToggleNewEdge, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -86,7 +99,9 @@ public class DrawWindow extends javax.swing.JFrame {
                 .addComponent(jToggleNewNode, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jToggleNewEdge, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 297, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 253, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -115,6 +130,12 @@ public class DrawWindow extends javax.swing.JFrame {
         this.requestFocus();
     }//GEN-LAST:event_jToggleStraightLineActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        UBeam ub = new UBeam(inter);
+        ub.setLocationRelativeTo(null);
+        ub.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     public JToggleButton getjToggleStraightLine() {
         return jToggleStraightLine;
     }
@@ -126,8 +147,15 @@ public class DrawWindow extends javax.swing.JFrame {
     public JToggleButton getjToggleNewEdge() {
         return jToggleNewEdge;
     }
+
+    public JToggleButton getjToggleButton2() {
+        return jToggleButton2;
+    }
+    
+    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JToggleButton jToggleButton2;

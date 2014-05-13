@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -15,7 +14,6 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.FlatteningPathIterator;
 import java.awt.geom.Path2D;
-import java.awt.geom.PathIterator;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -30,10 +28,8 @@ import javax.swing.JPanel;
 public class Interaction extends JPanel implements ActionListener {
 
     private Graphics2D g2d;
-    private final ArrayList<Node> nodes = new ArrayList<>();
-    private final ArrayList<Edge> edges = new ArrayList<>();
-
-    private final ArrayList<Line> lines = new ArrayList<>();
+    private ArrayList<Node> nodes = new ArrayList<>();
+    private ArrayList<Edge> edges = new ArrayList<>();
 
     private boolean moving = false;
     private Node movingNode = null;
@@ -47,8 +43,6 @@ public class Interaction extends JPanel implements ActionListener {
     private String elemFile = "elem_file.dat";
     private String inputFile = "input.dat";
     private String confFile = "conf_file.dat";
-
-    private Point linePoint = null;
 
     public Interaction(MainWindow jFrame) {
         this.setSize(500, 600);
@@ -71,26 +65,22 @@ public class Interaction extends JPanel implements ActionListener {
                     @Override
                     public void mousePressed(MouseEvent evt) {
 
-                        if (lines.size() > 0) {
-                            lines.get(0).belongToLine(evt.getPoint());
+                        for(Edge ed :edges){
+                            ed.belongToEdge(evt.getPoint());
 
                         }
 
                         if (evt.getButton() == MouseEvent.BUTTON1) {
 
-                            if (jFrame.isStraightLine()) {
-                                if (linePoint == null) {
-                                    linePoint = evt.getPoint();
-                                } else {
-                                    lines.add(new Line(linePoint, evt.getPoint()));
-                                    linePoint = null;
-                                }
-                                repaint();
-                                return;
-                            }
                             Node temp = getNode(evt.getPoint());
 
                             if (jFrame.isNewNode()) {
+                                for (Edge e : edges) {
+                                    if (e.belongToEdge(evt.getPoint())) {
+                                        splitEdge(evt.getPoint());
+                                        return;
+                                    }
+                                }
                                 if (temp == null) {
                                     newNode(evt.getPoint());
                                 }
@@ -125,6 +115,7 @@ public class Interaction extends JPanel implements ActionListener {
                         }
                         if (evt.getButton() == MouseEvent.BUTTON3) {
                             showRest(evt.getPoint());
+                            //drawUbeam();
                         }
                         repaint();
                     }
@@ -139,6 +130,7 @@ public class Interaction extends JPanel implements ActionListener {
                             selectedNode.setPos(evt.getPoint());
                             repaint();
                         }
+                        repaint();
                     }
                 });
 
@@ -169,41 +161,6 @@ public class Interaction extends JPanel implements ActionListener {
         g2d.drawLine(30, h, 20, h + 10); //Z
         g2d.drawLine(20, h + 10, 23, h + 4);
         g2d.drawLine(20, h + 10, 25, h + 8);
-        
-        /*int width = 100;
-        int height = 100;
-        g2d.drawLine(50, 50, 50+width, 50);
-        g2d.drawArc(50+width-height/2, 50, height, height, -90, 180);
-        g2d.drawLine(50, 50+height, 50+width, 50+height);*/
-        
-        Path2D.Double path = new Path2D.Double();
-        path.moveTo(100, 50);
-        path.lineTo(300, 50);
-        g2d.drawOval(300, 50, 5, 5);
-        g2d.drawOval(420, 100, 5, 5);
-        g2d.drawOval(300, 150, 5, 5);
-        path.curveTo(300, 50, 420, 100, 300, 150);
-        FlatteningPathIterator f = new FlatteningPathIterator(path.getPathIterator(new AffineTransform()), 0.1);
-        
-        Point p = new Point(100, 50);
-        float[] coords=new float[6];
-            while (!f.isDone()) {
-                f.currentSegment(coords);
-                int x=(int)coords[0];
-                int y=(int)coords[1];
-                //points.add(new Point(x,y));
-                System.out.println(x + " " + y);
-                g2d.drawLine(p.x, p.y, x, y);
-                p.setLocation(x,y);
-                f.next();
-            }
-        
-        //g2d.draw(path);
-        
-        for (Line l : lines) {
-            g2d.drawLine(l.getPoint1().x, l.getPoint1().y,
-                    l.getPoint2().x, l.getPoint2().y);
-        }
 
         for (Node n : nodes) {
             if (n.equals(selectedNode)) {
@@ -213,10 +170,11 @@ public class Interaction extends JPanel implements ActionListener {
             g2d.setColor(Color.black);
         }
         for (Edge e : edges) {
-            g2d.drawLine(e.getNode1().getPos().x,
-                    e.getNode1().getPos().y,
-                    e.getNode2().getPos().x,
-                    e.getNode2().getPos().y);
+            for (int i = 0; i < e.getPoints().size() - 1; i++) {
+                Point p1 = e.getPoints().get(i);
+                Point p2 = e.getPoints().get(i+1);
+                g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
+            }
 
             double dist = e.getNode1().getPos().distance(e.getNode2().getPos());
             double xDist = Math.abs(e.getNode1().getPos().x - e.getNode2().getPos().x);
@@ -237,6 +195,51 @@ public class Interaction extends JPanel implements ActionListener {
 
         }
 
+    }
+
+    public void drawUbeam(int length, int width, int radius) {
+        Path2D.Double path = new Path2D.Double();
+        int ix = 100;
+        int iy = 50;
+        path.moveTo(ix, iy);
+        path.lineTo(ix+length, iy);
+        path.curveTo(ix+length+radius, iy, ix+length+radius,
+                iy+width, ix+length, iy+width);
+        path.lineTo(ix, iy+width);
+        FlatteningPathIterator f = new FlatteningPathIterator(path.getPathIterator(new AffineTransform()), 0.1);
+        
+        //Point p = new Point(100, 50);
+        Node n1 = new Node(new Point(100, 50), nodeNumber++);
+        Node n2 = new Node(new Point(100, iy+width), nodeNumber++);
+        nodes.add(n1);
+        nodes.add(n2);
+        Edge edge = new Edge(n1, n2, edgeNumber);
+        edges.add(edge);
+
+        float[] coords = new float[6];
+        while (!f.isDone()) {
+            f.currentSegment(coords);
+            int x = (int) coords[0];
+            int y = (int) coords[1];
+            edge.insertPoint(new Point(x, y));
+            f.next();
+        }
+    }
+
+    private void splitEdge(Point p) {
+        Edge newEdge = null;
+        for (Edge e : edges) {
+            if (e.belongToEdge(p)) {
+                Node n = new Node(p, nodeNumber++);
+                nodes.add(n);
+                newEdge = e.splitEdge(p, n, edgeNumber++);
+                break;
+            }
+        }
+        if (newEdge != null) {
+            edges.add(newEdge);
+        }
+        repaint();
     }
 
     @Override
@@ -367,7 +370,7 @@ public class Interaction extends JPanel implements ActionListener {
     }
 
     private void generateNodeFile() {
-        if (nodes.size() == 0) {
+        if (nodes.isEmpty()) {
             return;
         }
         double lowerX = nodes.get(0).getPos().x;
@@ -487,8 +490,6 @@ public class Interaction extends JPanel implements ActionListener {
         }
     }
 
-
-    
     public void setNodeFile(String nodeFile) {
         this.nodeFile = nodeFile;
     }
@@ -504,5 +505,10 @@ public class Interaction extends JPanel implements ActionListener {
     public void setConfFile(String confFile) {
         this.confFile = confFile;
     }
-
+    
+    public void deleteAll(){
+        this.nodes = new ArrayList<>();
+        this.edges = new ArrayList<>();
+    }
+    
 }

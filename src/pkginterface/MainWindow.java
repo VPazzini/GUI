@@ -484,7 +484,6 @@ public class MainWindow extends javax.swing.JFrame {
                 new KeyAdapter() {
                     @Override
                     public void keyReleased(KeyEvent evt) {
-                        System.out.println("why??");
                         if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
                             inter.delete();
                         }

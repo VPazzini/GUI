@@ -4,6 +4,9 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/pazzini/NetBeansProjects/GUI/src/pkginterface/Interaction.java</file>
+            <file>file:/home/pazzini/NetBeansProjects/GUI/src/pkginterface/Edge.java</file>
+            <file>file:/home/pazzini/NetBeansProjects/GUI/src/pkginterface/DrawWindow.java</file>
+            <file>file:/home/pazzini/NetBeansProjects/GUI/src/pkginterface/UBeam.java</file>
             <file>file:/home/pazzini/NetBeansProjects/GUI/src/pkginterface/MainWindow.java</file>
         </group>
     </open-files>
