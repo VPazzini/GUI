@@ -7,10 +7,15 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.FlatteningPathIterator;
+import java.awt.geom.Path2D;
+import java.awt.geom.PathIterator;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -27,9 +32,9 @@ public class Interaction extends JPanel implements ActionListener {
     private Graphics2D g2d;
     private final ArrayList<Node> nodes = new ArrayList<>();
     private final ArrayList<Edge> edges = new ArrayList<>();
-    
+
     private final ArrayList<Line> lines = new ArrayList<>();
-    
+
     private boolean moving = false;
     private Node movingNode = null;
     private Node selectedNode = null;
@@ -42,9 +47,9 @@ public class Interaction extends JPanel implements ActionListener {
     private String elemFile = "elem_file.dat";
     private String inputFile = "input.dat";
     private String confFile = "conf_file.dat";
-    
+
     private Point linePoint = null;
-    
+
     public Interaction(MainWindow jFrame) {
         this.setSize(500, 600);
 
@@ -66,37 +71,57 @@ public class Interaction extends JPanel implements ActionListener {
                     @Override
                     public void mousePressed(MouseEvent evt) {
 
+                        if (lines.size() > 0) {
+                            lines.get(0).belongToLine(evt.getPoint());
+
+                        }
+
                         if (evt.getButton() == MouseEvent.BUTTON1) {
 
-                            if(jFrame.isStraightLine()){
-                                if(linePoint == null){
+                            if (jFrame.isStraightLine()) {
+                                if (linePoint == null) {
                                     linePoint = evt.getPoint();
-                                }else{
+                                } else {
                                     lines.add(new Line(linePoint, evt.getPoint()));
                                     linePoint = null;
                                 }
                                 repaint();
                                 return;
                             }
-                            
-                            
                             Node temp = getNode(evt.getPoint());
+
+                            if (jFrame.isNewNode()) {
+                                if (temp == null) {
+                                    newNode(evt.getPoint());
+                                }
+                            }
+
+                            if (jFrame.isNewEdge()) {
+                                if (temp != null) {
+                                    if (temp.equals(selectedNode)) {
+                                        selectedNode = null;
+                                    } else {
+                                        if (selectedNode != null) {
+                                            newEdge(temp, selectedNode);
+                                            selectedNode = null;
+                                        } else {
+                                            selectedNode = temp;
+                                        }
+                                    }
+                                } else {
+                                    selectedNode = null;
+                                }
+                                return;
+                            }
+
                             if (temp != null) {
                                 if (temp.equals(selectedNode)) {
                                     selectedNode = null;
                                 } else {
-                                    if (selectedNode != null) {
-                                        //edges.add(new Edge(temp, selectedNode, edgeNumber++));
-                                        newEdge(temp, selectedNode);
-                                        selectedNode = null;
-                                    } else {
-                                        selectedNode = temp;
-                                    }
+                                    selectedNode = temp;
                                 }
-                            } else {
-                                selectedNode = null;
-                                newNode(evt.getPoint());
                             }
+
                         }
                         if (evt.getButton() == MouseEvent.BUTTON3) {
                             showRest(evt.getPoint());
@@ -114,8 +139,6 @@ public class Interaction extends JPanel implements ActionListener {
                             selectedNode.setPos(evt.getPoint());
                             repaint();
                         }
-                        //moving = false;
-                        //moveNode(evt.getPoint());
                     }
                 });
 
@@ -147,11 +170,41 @@ public class Interaction extends JPanel implements ActionListener {
         g2d.drawLine(20, h + 10, 23, h + 4);
         g2d.drawLine(20, h + 10, 25, h + 8);
         
-        for(Line l : lines){
+        /*int width = 100;
+        int height = 100;
+        g2d.drawLine(50, 50, 50+width, 50);
+        g2d.drawArc(50+width-height/2, 50, height, height, -90, 180);
+        g2d.drawLine(50, 50+height, 50+width, 50+height);*/
+        
+        Path2D.Double path = new Path2D.Double();
+        path.moveTo(100, 50);
+        path.lineTo(300, 50);
+        g2d.drawOval(300, 50, 5, 5);
+        g2d.drawOval(420, 100, 5, 5);
+        g2d.drawOval(300, 150, 5, 5);
+        path.curveTo(300, 50, 420, 100, 300, 150);
+        FlatteningPathIterator f = new FlatteningPathIterator(path.getPathIterator(new AffineTransform()), 0.1);
+        
+        Point p = new Point(100, 50);
+        float[] coords=new float[6];
+            while (!f.isDone()) {
+                f.currentSegment(coords);
+                int x=(int)coords[0];
+                int y=(int)coords[1];
+                //points.add(new Point(x,y));
+                System.out.println(x + " " + y);
+                g2d.drawLine(p.x, p.y, x, y);
+                p.setLocation(x,y);
+                f.next();
+            }
+        
+        //g2d.draw(path);
+        
+        for (Line l : lines) {
             g2d.drawLine(l.getPoint1().x, l.getPoint1().y,
                     l.getPoint2().x, l.getPoint2().y);
         }
-        
+
         for (Node n : nodes) {
             if (n.equals(selectedNode)) {
                 g2d.setColor(Color.red);
@@ -196,37 +249,6 @@ public class Interaction extends JPanel implements ActionListener {
         repaint();
     }
 
-    /*public void newNode(Point p) {
-     if (!moving) {
-
-     Node cSelected = selectedNode;
-
-     Node temp = this.getNode(p);
-     if (temp != null) {
-     if (temp.equals(cSelected)) {
-     this.selectedNode = null;
-     } else {
-     if (cSelected != null) {
-     this.newEdge(cSelected, temp);
-     if (!shiftHold) {
-     selectedNode = null;
-     }
-     } else {
-     this.selectedNode = temp;
-     }
-     }
-     repaint();
-     return;
-     }
-
-     this.nodes.add(new Node(p, nodeNumber++));
-     this.repaint();
-     } else {
-     moving = false;
-     movingNode = null;
-     repaint();
-     }
-     }*/
     public void moveNode(Point p) {
         if (moving) {
 
@@ -465,6 +487,8 @@ public class Interaction extends JPanel implements ActionListener {
         }
     }
 
+
+    
     public void setNodeFile(String nodeFile) {
         this.nodeFile = nodeFile;
     }

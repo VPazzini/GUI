@@ -661,6 +661,10 @@ public class MainWindow extends javax.swing.JFrame {
         return drawWindow.getjToggleNewNode().isSelected();
     }
     
+    public boolean isNewEdge(){
+        return drawWindow.getjToggleNewEdge().isSelected();
+    }
+    
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
