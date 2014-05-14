@@ -1,8 +1,9 @@
-package pkginterface;
+package windows;
 
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
+import elements.Force;
 
 public class Restraints extends javax.swing.JPanel {
 

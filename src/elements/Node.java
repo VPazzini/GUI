@@ -1,4 +1,4 @@
-package pkginterface;
+package elements;
 
 import java.awt.Point;
 import java.util.ArrayList;

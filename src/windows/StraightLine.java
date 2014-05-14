@@ -1,4 +1,6 @@
-package pkginterface;
+package windows;
+
+import pkginterface.Interaction;
 
 public class StraightLine extends javax.swing.JFrame {
 

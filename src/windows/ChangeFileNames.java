@@ -4,7 +4,9 @@
  * and open the template in the editor.
  */
 
-package pkginterface;
+package windows;
+
+import pkginterface.Interaction;
 
 /**
  *

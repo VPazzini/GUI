@@ -1,5 +1,8 @@
 package pkginterface;
 
+import elements.Node;
+import elements.Edge;
+import windows.Restraints;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -202,7 +205,7 @@ public class Interaction extends JPanel implements ActionListener {
     public void drawLine(int length, int numNodes) {
         int ix = 100;
         int iy = 50;
-        int elem = (int) (length / numNodes);
+        int elem = (int) (length / (numNodes-1));
         Node n1 = new Node(new Point(ix, iy), nodeNumber);
         Node n2 = null;
         
@@ -217,7 +220,7 @@ public class Interaction extends JPanel implements ActionListener {
         this.repaint();
     }
 
-    public void drawUbend(int length, int width, int radius) {
+    public void drawUbend(int length, int width, int radius, int numNodes) {
         Path2D.Double path = new Path2D.Double();
         int ix = 100;
         int iy = 50;

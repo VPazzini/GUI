@@ -1,5 +1,7 @@
 package pkginterface;
 
+import windows.ChangeFileNames;
+import windows.DrawWindow;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JCheckBox;

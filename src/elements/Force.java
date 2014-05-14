@@ -1,4 +1,4 @@
-package pkginterface;
+package elements;
 
 public class Force {
     private final String axis;

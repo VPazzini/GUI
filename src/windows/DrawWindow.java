@@ -1,7 +1,9 @@
-package pkginterface;
+package windows;
 
+import windows.UBend;
 import java.awt.Color;
 import javax.swing.JToggleButton;
+import pkginterface.Interaction;
 
 public class DrawWindow extends javax.swing.JFrame {
 
