@@ -1,6 +1,7 @@
 package pkginterface;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Node {
@@ -12,13 +13,27 @@ public class Node {
     private Boolean Rx = false;
     private Boolean Ry = false;
     private Boolean Rz = false;
-    private int number;
+    private final int number;
+    private ArrayList<Force> forces = new ArrayList<>();
 
     public Node(Point pos, int number) {
         this.pos = pos;
         this.number = number;
     }
 
+    public ArrayList<Force> getForces() {
+        return forces;
+    }
+    
+     public void setForces(ArrayList<Force> forces) {
+        this.forces = forces;
+    }
+    
+    
+    public void addForce(String axis, int forceValue){
+        this.forces.add(new Force(axis, forceValue));
+    }
+    
     public Point getPos() {
         return pos;
     }

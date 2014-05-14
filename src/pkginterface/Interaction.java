@@ -48,7 +48,7 @@ public class Interaction extends JPanel implements ActionListener {
         this.setSize(500, 600);
 
         setLayout(new BorderLayout());
-        this.setBackground(Color.white);
+        //this.setBackground(Color.white);
         this.jFrame = jFrame;
 
         this.addMouseListener(
@@ -228,12 +228,11 @@ public class Interaction extends JPanel implements ActionListener {
         path.lineTo(ix, iy + width);
         FlatteningPathIterator f = new FlatteningPathIterator(path.getPathIterator(new AffineTransform()), 1);
 
-        //Point p = new Point(100, 50);
         Node n1 = new Node(new Point(100, 50), nodeNumber++);
         Node n2 = new Node(new Point(100, iy + width), nodeNumber++);
         nodes.add(n1);
         nodes.add(n2);
-        Edge edge = new Edge(n1, n2, edgeNumber);
+        Edge edge = new Edge(n1, n2, edgeNumber++);
         edges.add(edge);
 
         float[] coords = new float[6];
@@ -281,12 +280,12 @@ public class Interaction extends JPanel implements ActionListener {
         }
 
         JDialog rest = new JDialog();
-        rest.setSize(224, 141);
+        rest.setSize(250, 350);
         rest.setModal(true);
         rest.setResizable(false);
         rest.setLocationRelativeTo(null);
         rest.setTitle("Node " + temp.getNumber());
-        Restraints r = new Restraints(rest, temp.getRest());
+        Restraints r = new Restraints(rest, temp.getRest(), temp.getForces());
         rest.add(r);
 
         rest.setVisible(true);
@@ -297,7 +296,7 @@ public class Interaction extends JPanel implements ActionListener {
         temp.setRx(r.isRX());
         temp.setRy(r.isRY());
         temp.setRz(r.isRZ());
-
+        temp.setForces(r.getForces());
     }
 
     private Node getNode(Point p) {
