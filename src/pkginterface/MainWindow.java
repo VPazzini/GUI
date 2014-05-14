@@ -128,7 +128,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTextTIPOI.setText("0.25");
 
-        jButton2.setText("Beam Design");
+        jButton2.setText("Tube Design");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -444,7 +444,6 @@ public class MainWindow extends javax.swing.JFrame {
 
         jMenu2.setText("Edit");
 
-        jCheckBoxMenuItem1.setSelected(true);
         jCheckBoxMenuItem1.setText("Show Numbers on Beam Design");
         jCheckBoxMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -477,7 +476,6 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         drawWindow = new DrawWindow(inter);
-        //drawWindow.setSize(500, 600);
         drawWindow.setLocationRelativeTo(null);
 
         drawWindow.addKeyListener(
@@ -503,8 +501,6 @@ public class MainWindow extends javax.swing.JFrame {
                     }
 
                 });
-
-        //drawWindow.add(inter);
 
         drawWindow.setVisible(true);
 
@@ -650,10 +646,6 @@ public class MainWindow extends javax.swing.JFrame {
 
     public JSpinner getjSpinnerIterations() {
         return jSpinnerIterations;
-    }
-    
-    public boolean isStraightLine(){
-        return drawWindow.getjToggleStraightLine().isSelected();
     }
     
     public boolean isNewNode(){
