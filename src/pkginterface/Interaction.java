@@ -1,8 +1,7 @@
 package pkginterface;
 
-import elements.Node;
 import elements.Edge;
-import windows.Restraints;
+import elements.Node;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -25,8 +24,10 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.shape.Line;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import windows.Restraints;
 
 public class Interaction extends JPanel implements ActionListener {
 
@@ -205,14 +206,14 @@ public class Interaction extends JPanel implements ActionListener {
     public void drawLine(int length, int numNodes) {
         int ix = 100;
         int iy = 50;
-        int elem = (int) (length / (numNodes-1));
+        int elem = (int) (length / (numNodes - 1));
         Node n1 = new Node(new Point(ix, iy), nodeNumber);
         Node n2 = null;
-        
+
         nodes.add(n1);
-        
-        for (int i = 0; i < numNodes-1; i++) {
-            n2 = new Node(new Point(ix+(i+1)*elem, iy), nodeNumber);
+
+        for (int i = 0; i < numNodes - 1; i++) {
+            n2 = new Node(new Point(ix + (i + 1) * elem, iy), nodeNumber);
             nodes.add(n2);
             newEdge(n1, n2);
             n1 = n2;
@@ -246,7 +247,41 @@ public class Interaction extends JPanel implements ActionListener {
             edge.insertPoint(new Point(x, y));
             f.next();
         }
+
+        ArrayList<Point> splitPoints = new ArrayList<>();
+        double totalLength = edge.getLength();
+        double elem = totalLength / (numNodes - 1);
+        totalLength = (numNodes - 1) * elem;
+        double distance = 0;
+        for (int i = 0; i < edge.getPoints().size() - 1; i++) {
+            Point p1 = edge.getPoints().get(i);
+            Point p2 = edge.getPoints().get(i + 1);
+            distance += p1.distance(p2);
+
+            while ((distance - 1) > elem) {
+                int dist = (int) (elem - (distance - p1.distance(p2)));
+                Point split = interpolationByDistance(p1, p2, dist);
+                distance = distance - elem;
+                splitPoints.add(split);
+
+            }
+
+        }
+
+        for (Point sPoint : splitPoints) {
+            this.splitEdge(sPoint);
+        }
+
         this.repaint();
+    }
+
+    public Point interpolationByDistance(Point p1, Point p2, double d) {
+        double len = p1.distance(p2);
+        double ratio = d / len;
+        int x = (int) (ratio * p2.x + (1.0 - ratio) * p1.x);
+        int y = (int) (ratio * p2.y + (1.0 - ratio) * p1.y);
+        //System.out.println(x + ", " + y);
+        return (new Point(x, y));
     }
 
     private void splitEdge(Point p) {

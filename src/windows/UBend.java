@@ -60,6 +60,11 @@ public class UBend extends javax.swing.JFrame {
         jLabel4.setText("Nodes");
 
         jSpinner1.setModel(new javax.swing.SpinnerNumberModel(2, 2, 1000, 1));
+        jSpinner1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSpinner1StateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -134,6 +139,19 @@ public class UBend extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonTryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTryActionPerformed
+        tryButton();
+    }//GEN-LAST:event_jButtonTryActionPerformed
+
+    private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
+        tryButton();
+        this.dispose();
+    }//GEN-LAST:event_jButtonOkActionPerformed
+
+    private void jSpinner1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner1StateChanged
+        tryButton();
+    }//GEN-LAST:event_jSpinner1StateChanged
+
+    private void tryButton(){
         inter.deleteAll();
         int length = 100;
         int width = 100;
@@ -150,13 +168,7 @@ public class UBend extends javax.swing.JFrame {
         }
 
         inter.drawUbend(length, width, radius, numNodes);
-    }//GEN-LAST:event_jButtonTryActionPerformed
-
-    private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
-        jButtonTry.doClick();
-        this.dispose();
-    }//GEN-LAST:event_jButtonOkActionPerformed
-
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonOk;

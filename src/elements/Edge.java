@@ -36,12 +36,12 @@ public class Edge {
         return points;
     }
     
-    public int getLength() {
-        int length = 0;
+    public double getLength() {
+        double length = 0;
         double elem_length = 0;
-        for (int i = 0; i < points.size() + 1; i++) {
+        for (int i = 0; i < points.size() - 1; i++) {
             elem_length = points.get(i).distance(points.get(i + 1));
-            length += (int) elem_length;
+            length += elem_length;
         }
         return length;
     }

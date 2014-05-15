@@ -161,6 +161,9 @@
               <SpinnerModel initial="2" maximum="1000" minimum="2" numberType="java.lang.Integer" stepSize="1" type="number"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="jSpinner1StateChanged"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
