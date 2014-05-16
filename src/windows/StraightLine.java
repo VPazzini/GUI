@@ -35,6 +35,11 @@ public class StraightLine extends javax.swing.JFrame {
         jLabel2.setText("Nodes");
 
         jSpinnerNodes.setModel(new javax.swing.SpinnerNumberModel(2, 2, 100, 1));
+        jSpinnerNodes.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSpinnerNodesStateChanged(evt);
+            }
+        });
 
         jButtonTry.setText("Try");
         jButtonTry.addActionListener(new java.awt.event.ActionListener() {
@@ -109,23 +114,30 @@ public class StraightLine extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonTryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTryActionPerformed
+        this.tryButton();
+    }//GEN-LAST:event_jButtonTryActionPerformed
+
+    private void jButtonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDoneActionPerformed
+        this.tryButton();
+        this.dispose();
+    }//GEN-LAST:event_jButtonDoneActionPerformed
+
+    private void jSpinnerNodesStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerNodesStateChanged
+        this.tryButton();
+    }//GEN-LAST:event_jSpinnerNodesStateChanged
+
+    private void tryButton(){
         inter.deleteAll();
         int length = 100;
         int numNodes = 2;
         try {
             length = Integer.parseInt(this.jTextLength.getText());
             numNodes = (int) this.jSpinnerNodes.getValue();
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             System.out.println(e);
         }
         inter.drawLine(length, numNodes);
-    }//GEN-LAST:event_jButtonTryActionPerformed
-
-    private void jButtonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDoneActionPerformed
-        jButtonTry.doClick();
-        this.dispose();
-    }//GEN-LAST:event_jButtonDoneActionPerformed
-
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonDone;

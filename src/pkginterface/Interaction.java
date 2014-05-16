@@ -25,10 +25,13 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import windows.Restraints;
 
 public class Interaction extends JPanel implements ActionListener {
+
+    private static Interaction inter = new Interaction();
 
     private Graphics2D g2d;
     private ArrayList<Node> nodes = new ArrayList<>();
@@ -37,7 +40,7 @@ public class Interaction extends JPanel implements ActionListener {
     private boolean moving = false;
     private Node selectedNode = null;
     private final int nodeSize = 20;
-    private final MainWindow jFrame;
+    private MainWindow jFrame;
     private int nodeNumber = 1;
     private int edgeNumber = 1;
     private boolean shiftHold = false;
@@ -46,11 +49,11 @@ public class Interaction extends JPanel implements ActionListener {
     private String inputFile = "input.dat";
     private String confFile = "conf_file.dat";
 
-    public Interaction(MainWindow jFrame) {
+    public Interaction() {
         this.setSize(500, 600);
 
         setLayout(new BorderLayout());
-        this.jFrame = jFrame;
+        //this.jFrame = jFrame;
 
         this.addMouseListener(
                 new MouseAdapter() {
@@ -200,17 +203,22 @@ public class Interaction extends JPanel implements ActionListener {
     public void drawLine(int length, int numNodes) {
         int ix = 100;
         int iy = 50;
-        int elem = (int) (length / (numNodes - 1));
-        Node n1 = new Node(new Point(ix, iy), nodeNumber);
-        Node n2 = null;
-
+        double elem = (length / (numNodes - 1));
+        Node n1 = new Node(new Point(ix, iy), nodeNumber++);
+        Node n2 = new Node(new Point(ix+length, iy), nodeNumber++);
+        newEdge(n1, n2);
         nodes.add(n1);
+        nodes.add(n2);
+        ArrayList<Point> splitPoints = new ArrayList<>();
+        for (int i = 0; i < numNodes - 2; i++) {
+            double x = (ix + (i + 1) * elem);
 
-        for (int i = 0; i < numNodes - 1; i++) {
-            n2 = new Node(new Point(ix + (i + 1) * elem, iy), nodeNumber);
+            Point p = new Point((int) x, iy);
+            /*n2 = new Node(p, nodeNumber++);
             nodes.add(n2);
             newEdge(n1, n2);
-            n1 = n2;
+            n1 = n2;*/
+            this.splitEdge(p);
         }
         this.repaint();
     }
@@ -396,6 +404,14 @@ public class Interaction extends JPanel implements ActionListener {
         this.generateInputFile();
     }
 
+    public ArrayList<Node> getNodes() {
+        return nodes;
+    }
+
+    public ArrayList<Edge> getEdges() {
+        return edges;
+    }
+
     private void generateNodeFile() {
         if (nodes.isEmpty()) {
             return;
@@ -536,6 +552,14 @@ public class Interaction extends JPanel implements ActionListener {
     public void deleteAll() {
         this.nodes = new ArrayList<>();
         this.edges = new ArrayList<>();
+    }
+
+    public void setMainWindow(MainWindow jFrame) {
+        this.jFrame = jFrame;
+    }
+
+    public static synchronized Interaction getInstance() {
+        return inter;
     }
 
 }

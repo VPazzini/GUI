@@ -9,10 +9,10 @@ public class DrawWindow extends javax.swing.JFrame {
 
     Interaction inter;
 
-    public DrawWindow(Interaction inter) {
+    public DrawWindow() {
         initComponents();
-        this.inter = inter;
-        this.jPanel1.add(inter);
+        this.inter = Interaction.getInstance();
+        this.jPanel1.add(this.inter);
         this.jPanel1.setBackground(Color.white);
         this.requestFocus();
         this.setFocusable(true);

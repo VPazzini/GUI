@@ -105,6 +105,9 @@
               <SpinnerModel initial="2" maximum="100" minimum="2" numberType="java.lang.Integer" stepSize="1" type="number"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="jSpinnerNodesStateChanged"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButtonTry">
           <Properties>
