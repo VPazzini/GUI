@@ -24,7 +24,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.shape.Line;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import windows.Restraints;
@@ -36,7 +35,6 @@ public class Interaction extends JPanel implements ActionListener {
     private ArrayList<Edge> edges = new ArrayList<>();
 
     private boolean moving = false;
-    private Node movingNode = null;
     private Node selectedNode = null;
     private final int nodeSize = 20;
     private final MainWindow jFrame;
@@ -52,7 +50,6 @@ public class Interaction extends JPanel implements ActionListener {
         this.setSize(500, 600);
 
         setLayout(new BorderLayout());
-        //this.setBackground(Color.white);
         this.jFrame = jFrame;
 
         this.addMouseListener(
@@ -69,11 +66,6 @@ public class Interaction extends JPanel implements ActionListener {
 
                     @Override
                     public void mousePressed(MouseEvent evt) {
-
-                        for (Edge ed : edges) {
-                            ed.belongToEdge(evt.getPoint());
-
-                        }
 
                         if (evt.getButton() == MouseEvent.BUTTON1) {
 
@@ -98,7 +90,9 @@ public class Interaction extends JPanel implements ActionListener {
                                     } else {
                                         if (selectedNode != null) {
                                             newEdge(temp, selectedNode);
-                                            selectedNode = null;
+                                            if (!shiftHold) {
+                                                selectedNode = null;
+                                            }
                                         } else {
                                             selectedNode = temp;
                                         }
@@ -230,7 +224,8 @@ public class Interaction extends JPanel implements ActionListener {
         path.curveTo(ix + length + radius, iy, ix + length + radius,
                 iy + width, ix + length, iy + width);
         path.lineTo(ix, iy + width);
-        FlatteningPathIterator f = new FlatteningPathIterator(path.getPathIterator(new AffineTransform()), 1);
+        FlatteningPathIterator f = new FlatteningPathIterator(
+                path.getPathIterator(new AffineTransform()), 1);
 
         Node n1 = new Node(new Point(100, 50), nodeNumber++);
         Node n2 = new Node(new Point(100, iy + width), nodeNumber++);
@@ -328,12 +323,8 @@ public class Interaction extends JPanel implements ActionListener {
 
         rest.setVisible(true);
 
-        temp.setX(r.isX());
-        temp.setY(r.isY());
-        temp.setZ(r.isZ());
-        temp.setRx(r.isRX());
-        temp.setRy(r.isRY());
-        temp.setRz(r.isRZ());
+        temp.setRest(r.getRest());
+
         temp.setForces(r.getForces());
     }
 

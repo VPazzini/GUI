@@ -101,6 +101,15 @@ public class Node {
         return rest;
     }
     
+    public void setRest(boolean[] rest){
+        x = rest[0];
+        y = rest[1];
+        z = rest[2];
+        Rx = rest[3];
+        Ry = rest[4];
+        Rz = rest[5];
+    }
+    
     @Override
     public int hashCode() {
         int hash = 5;

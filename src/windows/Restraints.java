@@ -245,7 +245,18 @@ public class Restraints extends javax.swing.JPanel {
     public boolean isRZ() {
         return jCheckBoxRZ.isSelected();
     }
-
+    
+    public boolean[] getRest(){
+        boolean[] rest = new boolean[6];
+        rest[0] = isX();
+        rest[1] = isY();
+        rest[2] = isZ();
+        rest[3] = isRX();
+        rest[4] = isRY();
+        rest[5] = isRZ();
+        return rest;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonAddForce;
