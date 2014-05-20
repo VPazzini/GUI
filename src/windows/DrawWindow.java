@@ -28,12 +28,16 @@ public class DrawWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jToolBar1 = new javax.swing.JToolBar();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jToggleNewNode = new javax.swing.JToggleButton();
         jToggleNewEdge = new javax.swing.JToggleButton();
         jButtonUBend = new javax.swing.JButton();
         jButtonLine = new javax.swing.JButton();
+
+        jToolBar1.setRollover(true);
+        jToolBar1.setPreferredSize(new java.awt.Dimension(30, 25));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tube Design");
@@ -42,9 +46,19 @@ public class DrawWindow extends javax.swing.JFrame {
 
         jToggleNewNode.setText("N");
         jToggleNewNode.setFocusable(false);
+        jToggleNewNode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleNewNodeActionPerformed(evt);
+            }
+        });
 
         jToggleNewEdge.setText("E");
         jToggleNewEdge.setFocusable(false);
+        jToggleNewEdge.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleNewEdgeActionPerformed(evt);
+            }
+        });
 
         jButtonUBend.setText("U");
         jButtonUBend.setFocusable(false);
@@ -125,6 +139,14 @@ public class DrawWindow extends javax.swing.JFrame {
         sl.setVisible(true);
     }//GEN-LAST:event_jButtonLineActionPerformed
 
+    private void jToggleNewNodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleNewNodeActionPerformed
+        jToggleNewEdge.setSelected(false);
+    }//GEN-LAST:event_jToggleNewNodeActionPerformed
+
+    private void jToggleNewEdgeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleNewEdgeActionPerformed
+       jToggleNewNode.setSelected(false);
+    }//GEN-LAST:event_jToggleNewEdgeActionPerformed
+
     public JToggleButton getjToggleNewNode() {
         return jToggleNewNode;
     }
@@ -140,5 +162,6 @@ public class DrawWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JToggleButton jToggleNewEdge;
     private javax.swing.JToggleButton jToggleNewNode;
+    private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
 }

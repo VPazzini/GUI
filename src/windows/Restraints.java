@@ -33,13 +33,6 @@ public class Restraints extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jCheckBoxX = new javax.swing.JCheckBox();
-        jCheckBoxY = new javax.swing.JCheckBox();
-        jCheckBoxZ = new javax.swing.JCheckBox();
-        jCheckBoxRX = new javax.swing.JCheckBox();
-        jCheckBoxRY = new javax.swing.JCheckBox();
-        jCheckBoxRZ = new javax.swing.JCheckBox();
-        jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jComboForceAxis = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -48,20 +41,13 @@ public class Restraints extends javax.swing.JPanel {
         jButtonAddForce = new javax.swing.JButton();
         jButtonRemoveForce = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-
-        jCheckBoxX.setText("X");
-
-        jCheckBoxY.setText("Y");
-
-        jCheckBoxZ.setText("Z");
-
-        jCheckBoxRX.setText("RX");
-
-        jCheckBoxRY.setText("RY");
-
-        jCheckBoxRZ.setText("RZ");
-
-        jLabel1.setText("Select the wanted Restraints");
+        jPanel2 = new javax.swing.JPanel();
+        jCheckBoxRZ = new javax.swing.JCheckBox();
+        jCheckBoxRX = new javax.swing.JCheckBox();
+        jCheckBoxY = new javax.swing.JCheckBox();
+        jCheckBoxX = new javax.swing.JCheckBox();
+        jCheckBoxZ = new javax.swing.JCheckBox();
+        jCheckBoxRY = new javax.swing.JCheckBox();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Forces"));
 
@@ -135,6 +121,61 @@ public class Restraints extends javax.swing.JPanel {
             }
         });
 
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Restraints"));
+
+        jCheckBoxRZ.setText("RZ");
+
+        jCheckBoxRX.setText("RX");
+
+        jCheckBoxY.setText("Y");
+
+        jCheckBoxX.setText("X");
+
+        jCheckBoxZ.setText("Z");
+
+        jCheckBoxRY.setText("RY");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCheckBoxX)
+                    .addComponent(jCheckBoxY))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addComponent(jCheckBoxZ)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jCheckBoxRY))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jCheckBoxRX)
+                        .addGap(18, 18, 18)
+                        .addComponent(jCheckBoxRZ)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jCheckBoxRX, jCheckBoxRY, jCheckBoxRZ, jCheckBoxX, jCheckBoxY, jCheckBoxZ});
+
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBoxX)
+                    .addComponent(jCheckBoxZ)
+                    .addComponent(jCheckBoxRY))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBoxY)
+                    .addComponent(jCheckBoxRX)
+                    .addComponent(jCheckBoxRZ))
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -142,53 +183,17 @@ public class Restraints extends javax.swing.JPanel {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jCheckBoxX)
-                                    .addComponent(jCheckBoxY))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(17, 17, 17)
-                                        .addComponent(jCheckBoxZ)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jCheckBoxRY))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jCheckBoxRX)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jCheckBoxRZ))))
-                            .addComponent(jLabel1))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jCheckBoxRX, jCheckBoxRY, jCheckBoxRZ, jCheckBoxX, jCheckBoxY, jCheckBoxZ});
-
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(jLabel1)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jCheckBoxX)
-                            .addComponent(jCheckBoxZ)
-                            .addComponent(jCheckBoxRY))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jCheckBoxY)
-                            .addComponent(jCheckBoxRX)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addComponent(jCheckBoxRZ)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addContainerGap())
         );
@@ -206,17 +211,33 @@ public class Restraints extends javax.swing.JPanel {
         } catch (Exception e) {
             force = 0;
         }
-        resultList.addElement(new Force(axis, force));
+        Force f = new Force(axis, force);
+        int ind = resultList.indexOf(f);
+
+        if (ind == -1) {
+            resultList.addElement(f);
+        } else {
+            f = (Force) resultList.get(ind);
+            f.addForce(force);
+            if (f.getForceValue() == 0) {
+                resultList.remove(ind);
+            } else {
+                resultList.set(ind, f);
+            }
+        }
+
     }//GEN-LAST:event_jButtonAddForceActionPerformed
 
     private void jButtonRemoveForceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoveForceActionPerformed
         int ind = jListForces.getSelectedIndex();
-        resultList.remove(ind);
+        if(ind != -1){
+            resultList.remove(ind);
+        }
     }//GEN-LAST:event_jButtonRemoveForceActionPerformed
 
     public ArrayList<Force> getForces() {
         ArrayList<Force> forces = new ArrayList<>();
-        for(Object o : resultList.toArray()){
+        for (Object o : resultList.toArray()) {
             forces.add((Force) o);
         }
         return forces;
@@ -245,8 +266,8 @@ public class Restraints extends javax.swing.JPanel {
     public boolean isRZ() {
         return jCheckBoxRZ.isSelected();
     }
-    
-    public boolean[] getRest(){
+
+    public boolean[] getRest() {
         boolean[] rest = new boolean[6];
         rest[0] = isX();
         rest[1] = isY();
@@ -256,7 +277,7 @@ public class Restraints extends javax.swing.JPanel {
         rest[5] = isRZ();
         return rest;
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonAddForce;
@@ -268,9 +289,9 @@ public class Restraints extends javax.swing.JPanel {
     private javax.swing.JCheckBox jCheckBoxY;
     private javax.swing.JCheckBox jCheckBoxZ;
     private javax.swing.JComboBox jComboForceAxis;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JList jListForces;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextFieldForceValue;
     // End of variables declaration//GEN-END:variables

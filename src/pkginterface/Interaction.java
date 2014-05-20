@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -25,7 +26,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import windows.Restraints;
 
@@ -48,12 +48,14 @@ public class Interaction extends JPanel implements ActionListener {
     private String elemFile = "elem_file.dat";
     private String inputFile = "input.dat";
     private String confFile = "conf_file.dat";
+    private Point rectPoint1 = new Point();
+    private Point rectPoint2 = new Point();
+    private boolean rect = false;
 
     public Interaction() {
         this.setSize(500, 600);
 
         setLayout(new BorderLayout());
-        //this.jFrame = jFrame;
 
         this.addMouseListener(
                 new MouseAdapter() {
@@ -64,6 +66,7 @@ public class Interaction extends JPanel implements ActionListener {
                             moving = false;
                             selectedNode = null;
                         }
+                        rect = false;
                         repaint();
                     }
 
@@ -129,7 +132,13 @@ public class Interaction extends JPanel implements ActionListener {
                         moving = true;
                         if (selectedNode != null) {
                             selectedNode.setPos(evt.getPoint());
-                            repaint();
+                        } else {
+                            if (!rect) {
+                                rectPoint1.setLocation(evt.getPoint());
+                                rect = true;
+                            } else {
+                                rectPoint2.setLocation(evt.getPoint());
+                            }
                         }
                         repaint();
                     }
@@ -146,11 +155,10 @@ public class Interaction extends JPanel implements ActionListener {
         rh.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g2d.setRenderingHints(rh);
 
-        Rectangle r = this.getBounds();
-        int h = r.height - 30;
-        int w = r.width - 10;
-
-        //Drawing the coordinates symbol
+        int h = this.getBounds().height - 30;
+        int w = this.getBounds().width - 10;
+        
+        //<editor-fold defaultstate="collapsed" desc=" Drawing the coordinates symbol">
         g2d.drawLine(30, h, 55, h); //X
         g2d.drawLine(55, h, 49, h - 3);
         g2d.drawLine(55, h, 49, h + 3);
@@ -162,18 +170,19 @@ public class Interaction extends JPanel implements ActionListener {
         g2d.drawLine(30, h, 20, h + 10); //Z
         g2d.drawLine(20, h + 10, 23, h + 4);
         g2d.drawLine(20, h + 10, 25, h + 8);
-        //Drawing the coordinates symbol
+        //</editor-fold>
 
-        for (Node n : nodes) {
-            if (n.equals(selectedNode)) {
-                g2d.setColor(Color.red);
-            }
-            g2d.drawOval(n.getPos().x - nodeSize / 2, n.getPos().y - nodeSize / 2, nodeSize, nodeSize);
-            g2d.setColor(Color.black);
+        if (rect) {
+
+            Rectangle rect = new Rectangle(rectPoint1);
+            rect.add(rectPoint2);
+            
+            g2d.draw(rect);
         }
 
         for (Edge e : edges) {
             for (int i = 0; i < e.getPoints().size() - 1; i++) {
+
                 Point p1 = e.getPoints().get(i);
                 Point p2 = e.getPoints().get(i + 1);
                 g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
@@ -198,6 +207,19 @@ public class Interaction extends JPanel implements ActionListener {
 
         }
 
+        for (Node n : nodes) {
+            g2d.setColor(g2d.getBackground());
+            g2d.fillOval(n.getPos().x - nodeSize / 2, n.getPos().y - nodeSize / 2, nodeSize, nodeSize);
+
+            if (n.equals(selectedNode)) {
+                g2d.setColor(Color.red);
+            } else {
+                g2d.setColor(Color.black);
+            }
+            g2d.drawOval(n.getPos().x - nodeSize / 2, n.getPos().y - nodeSize / 2, nodeSize, nodeSize);
+            g2d.setColor(Color.black);
+        }
+
     }
 
     public void drawLine(int length, int numNodes) {
@@ -205,7 +227,7 @@ public class Interaction extends JPanel implements ActionListener {
         int iy = 50;
         double elem = (length / (numNodes - 1));
         Node n1 = new Node(new Point(ix, iy), nodeNumber++);
-        Node n2 = new Node(new Point(ix+length, iy), nodeNumber++);
+        Node n2 = new Node(new Point(ix + length, iy), nodeNumber++);
         newEdge(n1, n2);
         nodes.add(n1);
         nodes.add(n2);
@@ -214,10 +236,6 @@ public class Interaction extends JPanel implements ActionListener {
             double x = (ix + (i + 1) * elem);
 
             Point p = new Point((int) x, iy);
-            /*n2 = new Node(p, nodeNumber++);
-            nodes.add(n2);
-            newEdge(n1, n2);
-            n1 = n2;*/
             this.splitEdge(p);
         }
         this.repaint();
@@ -254,7 +272,6 @@ public class Interaction extends JPanel implements ActionListener {
         ArrayList<Point> splitPoints = new ArrayList<>();
         double totalLength = edge.getLength();
         double elem = totalLength / (numNodes - 1);
-        totalLength = (numNodes - 1) * elem;
         double distance = 0;
         for (int i = 0; i < edge.getPoints().size() - 1; i++) {
             Point p1 = edge.getPoints().get(i);
@@ -283,7 +300,6 @@ public class Interaction extends JPanel implements ActionListener {
         double ratio = d / len;
         int x = (int) (ratio * p2.x + (1.0 - ratio) * p1.x);
         int y = (int) (ratio * p2.y + (1.0 - ratio) * p1.y);
-        //System.out.println(x + ", " + y);
         return (new Point(x, y));
     }
 
@@ -321,7 +337,7 @@ public class Interaction extends JPanel implements ActionListener {
         }
 
         JDialog rest = new JDialog();
-        rest.setSize(250, 350);
+        rest.setSize(250, 370);
         rest.setModal(true);
         rest.setResizable(false);
         rest.setLocationRelativeTo(null);
@@ -505,7 +521,6 @@ public class Interaction extends JPanel implements ActionListener {
                     + ", NFLEX=" + jFrame.getjTextNFLEX().getText()
                     + ", VELOCITY=" + jFrame.getjTextVelocity().getText()
                     + ", DENSITY=" + jFrame.getjTextDensity().getText()
-                    + ", TIMESTEP=" + jFrame.getjTextTimeStep().getText()
                     + ", TF=" + jFrame.getjTextTF().getText() + "\n/\n";
             output.write(line);
 
